@@ -16,7 +16,7 @@ public class Parser {
         if (features.length() == 2) {
             return new ArrayList<>();
         } else {
-            features = features.substring(1, features.length() - 1);
+            features = features.substring(0, features.length() - 1);
             String[] splitFeatrues = features.split("-");
             return new ArrayList<>(Arrays.asList(splitFeatrues));
         }   
@@ -29,9 +29,9 @@ public class Parser {
         return Duration.ofMinutes(minutes).plusSeconds(seconds);
     }
 
-    public static ArrayList<Song> parseFile(String path) {
+    public static ArrayList<Song> parseFile() {
         ArrayList<Song> songList = new ArrayList<>();
-        try (BufferedReader bReader = new BufferedReader(new FileReader(path))) {
+        try (BufferedReader bReader = new BufferedReader(new FileReader(FILEPATH))) {
             String line;
             int tracker = 0;
             while ((line = bReader.readLine()) != null) {
@@ -58,22 +58,14 @@ public class Parser {
         HashMap<String, Song> songMap = new HashMap<>();
         for (Song s : songs) {
             if (!songMap.containsKey(s.getName())) {
-                songMap.put(s.getName(), s);
+                songMap.put(s.getName().toUpperCase(), s);
             }
         }
         return songMap;
     }
 
     public static HashMap<String, Song> generateSongMap() {
-        ArrayList<Song> songs = parseFile(FILEPATH);
+        ArrayList<Song> songs = parseFile();
         return mapNameToSong(songs);
-    }
-
-    public static void main(String[] args) {
-        ArrayList<Song> songs = parseFile("yeezle\\data\\discography.csv");
-        HashMap<String, Song> songMap = mapNameToSong(songs);
-        for (String s : songMap.keySet()) {
-            System.out.println(songMap.get(s));
-        }
     }
 }

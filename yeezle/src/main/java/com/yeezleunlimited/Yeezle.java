@@ -2,6 +2,7 @@ package com.yeezleunlimited;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -12,13 +13,18 @@ public class Yeezle {
     private int maxGuesses;
     private int currGuesses;
     private HashMap<String, Song> songMap;
+    private Song[] prevGuesses;
+    private int prevIndex;
 
     public Yeezle() {
         this.currGuesses = 0;
         this.maxGuesses = 8;
         this.songMap = Parser.generateSongMap();
-        int randomIndex = new Random().nextInt(this.songMap.size());
-        this.solution = (Song)this.songMap.values().toArray()[randomIndex];
+        Random r = new Random();
+        int randomIndex = songMap.size() > 0 ? r.nextInt(songMap.size()) : 0;
+        this.solution = Parser.parseFile().get(randomIndex);
+        this.prevGuesses = new Song[8];
+        this.prevIndex = 0;
     }
 
     public Song getSolution() {
@@ -38,6 +44,9 @@ public class Yeezle {
     }
 
     public int[] guess(Song song) {
+        this.currGuesses ++;
+        prevGuesses[prevIndex] = song;
+        prevIndex ++;
         int[] matches = new int[4];
         matches[0] = scoreAlbum(song);
         matches[1] = scoreTrack(song);
@@ -102,6 +111,34 @@ public class Yeezle {
         return tracker;
     }
 
+    public boolean gameIsOver() {
+        return this.currGuesses > this.maxGuesses;
+    }
+
+    public boolean gameIsWon(int[] scores) {
+        for (Integer i : scores) {
+            if (i != 2) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void printGame() {
+        System.out.println("Previous Guesses: ");
+        System.out.println(this.currGuesses + "/" + this.maxGuesses + " Guesses Used");
+        System.out.println("Name | Album | Track | Duration | Features");
+        for (Song s : prevGuesses) {
+            if (s == null) {
+                continue;
+            } else {
+                System.out.println(s.getName() + " | " + s.getAlbum() + " | " + 
+                s.getTrack() + " | " + s.getLength() + " | " + s.getFeatures());
+            }
+        }
+    }
+
+
     private int scoreLength(Song song) {
         long songSeconds = song.getLength().getSeconds();
         long solutionSeconds = this.solution.getLength().getSeconds();
@@ -115,6 +152,7 @@ public class Yeezle {
         }
         return 0;
     }
+    
     
 
     public static void main(String[] args) {
