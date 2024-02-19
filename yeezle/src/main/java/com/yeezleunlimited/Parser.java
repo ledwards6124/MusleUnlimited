@@ -11,19 +11,55 @@ import java.util.HashMap;
 public class Parser {
 
     public static String FILEPATH = "yeezle\\data\\discography.csv";
+    public static HashMap<Integer, String> albums = new HashMap<>();
+
+    static {
+        albums.put(1, "The College Dropout");
+        albums.put(2, "Late Registration");
+        albums.put(3, "Graduation");
+        albums.put(4, "808's & Heartbreaks");
+        albums.put(5, "My Beautiful Dark Twisted Fantasy");
+        albums.put(6, "Watch The Throne");
+        albums.put(7, "Yeezus");
+        albums.put(8, "The Life of Pablo");
+        albums.put(9, "Ye");
+        albums.put(10, "Kids See Ghosts");
+        albums.put(11, "Jesus Is King");
+        albums.put(12, "Donda");
+        albums.put(13, "VULTURES 1");
+    }
+    
+    public static String albumNumToName(int albumNum) {
+        return albums.containsKey(albumNum) ? albums.get(albumNum) : "Invalid album number";
+    }
+
+    public static String durationToString(Duration d) {
+        String duration = "";
+        int seconds = (int)d.getSeconds();
+        int minutes = Math.floorDiv(seconds, 60);
+        int remainingSeconds = seconds - (minutes * 60);
+        String oString = "0";
+        if (remainingSeconds < 10) {
+            duration += Integer.toString(minutes) + ":" + oString + Integer.toString(remainingSeconds);
+        } else {
+            duration += Integer.toString(minutes) + ":" + Integer.toString(remainingSeconds);
+        }
+        
+        return duration;
+    }
     
     public static ArrayList<String> parseFeatures(String features) {
-        if (features.length() == 2) {
+        features = features.substring(1, features.length() - 1);
+        if (features.length() == 0) {
             return new ArrayList<>();
         } else {
-            features = features.substring(0, features.length() - 1);
-            String[] splitFeatrues = features.split("-");
+            String[]splitFeatrues = features.split("-");
             return new ArrayList<>(Arrays.asList(splitFeatrues));
         }   
     }
 
     public static Duration parseLength(String length) {
-        String[] values = length.split(":");
+        String[]values = length.split(":");
         int minutes = Integer.parseInt(values[0].replace(" ", ""));
         int seconds = Integer.parseInt(values[1].replace(" ", ""));
         return Duration.ofMinutes(minutes).plusSeconds(seconds);
@@ -39,7 +75,7 @@ public class Parser {
                     tracker = 1;
                     continue;
                 }
-                String[] values = line.split(",");
+                String[]values = line.split(",");
                 String name = values[0];
                 int album = Integer.parseInt(values[1].replace(" ", ""));
                 int track = Integer.parseInt(values[2].replace(" ", ""));

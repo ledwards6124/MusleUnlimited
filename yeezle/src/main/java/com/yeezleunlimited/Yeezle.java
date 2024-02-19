@@ -13,7 +13,7 @@ public class Yeezle {
     private int maxGuesses;
     private int currGuesses;
     private HashMap<String, Song> songMap;
-    private Song[] prevGuesses;
+    private Song[]prevGuesses;
     private int prevIndex;
 
     public Yeezle() {
@@ -43,15 +43,15 @@ public class Yeezle {
         return this.songMap;
     }
 
-    public int[] guess(Song song) {
+    public int[]guess(Song song) {
         this.currGuesses ++;
-        prevGuesses[prevIndex] = song;
+        prevGuesses[prevIndex]= song;
         prevIndex ++;
-        int[] matches = new int[4];
-        matches[0] = scoreAlbum(song);
-        matches[1] = scoreTrack(song);
-        matches[2] = scoreLength(song);
-        matches[3] = scoreFeatures(song);
+        int[]matches = new int[4];
+        matches[0]= scoreAlbum(song);
+        matches[1]= scoreTrack(song);
+        matches[2]= scoreLength(song);
+        matches[3]= scoreFeatures(song);
         return matches;
     }
 
@@ -115,7 +115,7 @@ public class Yeezle {
         return this.currGuesses > this.maxGuesses;
     }
 
-    public boolean gameIsWon(int[] scores) {
+    public boolean gameIsWon(int[]scores) {
         for (Integer i : scores) {
             if (i != 2) {
                 return false;
@@ -132,8 +132,9 @@ public class Yeezle {
             if (s == null) {
                 continue;
             } else {
-                System.out.println(s.getName() + " | " + s.getAlbum() + " | " + 
-                s.getTrack() + " | " + s.getLength() + " | " + s.getFeatures());
+                String features = s.getFeatures().size() == 0 ? "No features" : s.getFeatures().toString() ;
+                System.out.println(s.getName() + " | " + Parser.albumNumToName(s.getAlbum()) + " | " + 
+                s.getTrack() + " | " + Parser.durationToString(s.getLength()) + " | " + features);
             }
         }
     }
@@ -155,11 +156,11 @@ public class Yeezle {
     
     
 
-    public static void main(String[] args) {
+    public static void main(String[]args) {
         Yeezle yeezle = new Yeezle();
         Song s = new Song("Come to Life", 11, 4, Duration.ofMinutes(3).plusSeconds(10), new ArrayList<String>());
         System.out.println(yeezle.getSolution());
-        int[] guess = yeezle.guess(s);
+        int[]guess = yeezle.guess(s);
         for (Integer i : guess) {
             System.out.println(i);
         }

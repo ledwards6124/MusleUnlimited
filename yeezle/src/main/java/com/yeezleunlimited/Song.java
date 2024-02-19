@@ -43,9 +43,9 @@ public class Song {
     @Override
     public String toString() {
         return "Name: " + this.name + 
-        "\nAlbum: " + this.album + 
+        "\nAlbum: " + Parser.albumNumToName(this.album) + 
         "\nTrack: " + this.track +
-        "\nLength: " + this.length + 
-        "\nFeatures: " + this.features.toString();
+        "\nLength: " + Parser.durationToString(this.length) + 
+        "\nFeatures: " + Parser.parseFeatures(this.features.toString());
     }
 }
