@@ -48,6 +48,28 @@ def getDiscography(artistID):
             releaseIDs[releaseID] = releaseName
     return releaseIDs
 
-res = getDiscography(3270638)
-for val in res:
-    print(val, res.get(val))
+def getTrackList(albumID):
+    client = connect()
+    res = client.release(albumID)
+    album = []
+    i = 0
+    for song in res.tracklist:
+        strIndex = str(song)
+        strIndex = strip(strIndex, "'")
+        strIndex = strIndex[7:]
+        strIndex = strip(strIndex, ">")
+        indexList = strIndex.split(" ")
+        trackNum = indexList[0]
+        trackName = " ".join([entry for index, entry in enumerate(indexList) if index > 0])
+        album.append((trackNum, trackName))
+        i += 1
+    return album
+
+def getAlbumJSON(albumID):
+    client = connect()
+    res = client.release(albumID)
+    return res.data
+
+res = getTrackList(826492)
+for tup in res:
+    print(tup)
