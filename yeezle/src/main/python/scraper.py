@@ -1,75 +1,64 @@
-from artist import *
-import json
-from discogs_client import *
+import requests
+from flask import Flask, jsonify
+import base64
 
-TOKEN = 'YXnelCZsMeZmRyIEObnlINawJHiizEjQGUGvJhSN'
+app = Flask(__name__)
 
-def strip(s, char):
-    newS = ""
-    for ch in s:
-        if ch != char:
-            newS += ch
-    return newS
+ENDPOINT = 'https://api.spotify.com/v1'
 
-def connect():
-    client = Client('YeezleUnlimited/1.0', user_token=TOKEN)
-    return client
+@app.route('/get_token', methods=['POST'])
+def getAccessToken():
+    clientID = '8c825f8af32f4a93a89d1a57a8352a88'
+    clientSecret = '4f1a9d94d60245cda6519504004130ca'
+    credentials = f"{clientID}:{clientSecret}"
+    credentialsBase64 = base64.b64encode(credentials.encode()).decode()
+    headers = {'Authorization':f'Basic {credentialsBase64}',}
+    data = {'grant_type':'client_credentials'}
+    response = requests.post('https://accounts.spotify.com/api/token', headers=headers, data=data)
+    if response.status_code == 200:
+        return response.status_code, response.json()
+    else:
+        return response.status_code, response.json()
+    
+@app.route('/artists/<artist_id>', methods=['GET'])
+def getArtist(artistID):
+    token = getAccessToken()[1].get('access_token')
+    headers = {'Authorization': f'Bearer {token}'}
+    response = requests.get(f"{ENDPOINT}/artists/{artistID}", headers=headers)
+    return response.status_code, response.json()
 
-def findArtists(name):
-    client = connect()
-    res = client.search(name, type='artist').page(1)
-    artistIDs = {}
-    for index in res:
-        strIndex = str(index)
-        strIndex = str(strip(strIndex, "'"))
-        strIndex = str(strip(strIndex, '>'))
-        strIndex = str(strIndex[8:])
-        indexList = strIndex.split(" ")
-        artistID = indexList[0]
-        artistName = " ".join([entry for index, entry in enumerate(indexList) if index > 0])
-        if artistID not in artistIDs:
-            artistIDs[artistID] = artistName
-    return artistIDs
+@app.route('/albums/<albumID>', methods=['GET'])
+def getAlbum(albumID):    
+    token = getAccessToken()[1].get('access_token')
+    headers = {'Authorization': f'Bearer {token}'}
+    response = requests.get(f"{ENDPOINT}/albums/{albumID}", headers=headers)
+    return response.status_code, response.json()
 
+@app.route('/albums/<artistID>/albums')
 def getDiscography(artistID):
-    client = connect()
-    res = client.artist(artistID).releases.page(1)
-    releaseIDs = {}
-    for index in res:
-        strIndex = str(index)
-        strIndex = strip(strIndex, "'")
-        strIndex = strIndex[8:]
-        strIndex = strip(strIndex, ">")
-        indexList = strIndex.split(" ")
-        releaseID = indexList[0]
-        releaseName = " ".join([entry for index, entry in enumerate(indexList) if index > 0])
-        type = index.fetch('type')
-        if releaseID not in releaseIDs and type == 'master':
-            releaseIDs[releaseID] = releaseName
-    return releaseIDs
+    token = getAccessToken()[1].get('access_token')
+    headers = {'Authorization': f'Bearer {token}'}
+    response = requests.get(f"{ENDPOINT}/artists/{artistID}/albums?include_groups=album", headers=headers)
+    return response.status_code, response.json()
 
-def getTrackList(albumID):
-    client = connect()
-    res = client.release(albumID)
-    album = []
-    i = 0
-    for song in res.tracklist:
-        strIndex = str(song)
-        strIndex = strip(strIndex, "'")
-        strIndex = strIndex[7:]
-        strIndex = strip(strIndex, ">")
-        indexList = strIndex.split(" ")
-        trackNum = indexList[0]
-        trackName = " ".join([entry for index, entry in enumerate(indexList) if index > 0])
-        album.append((trackNum, trackName))
-        i += 1
-    return album
+@app.route('/albums/<albumID>/tracks')
+def getAlbumTracks(albumID):
+    token = getAccessToken()[1].get('access_token')
+    headers = {'Authorization': f'Bearer {token}'}
+    tracks = []
+    response = requests.get(f"{ENDPOINT}/albums/{albumID}/tracks", headers=headers).json()
+    for tup in response.get('items'):
+        duration = tup.get('duration_ms') / 1000
+        trackID = tup.get('id')
+        name = tup.get('name')
+        tracks.append((name, trackID, duration))
+    return tracks
+def main():
+    res = getDiscography('3qiHUAX7zY4Qnjx8TNUzVx')
+    for tup in res[1].get('items'):
+        albumID = tup.get('id')
+        tracks = getAlbumTracks(albumID)
+        for track in tracks:
+            print(track)
 
-def getAlbumJSON(albumID):
-    client = connect()
-    res = client.release(albumID)
-    return res.data
-
-res = getTrackList(826492)
-for tup in res:
-    print(tup)
+main()
