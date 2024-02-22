@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class Parser {
 
-    public static String FILEPATH = "yeezle\\data\\discography.csv";
+    public static String FILEPATH = "YeezleUnlimited\\yeezle\\data\\discography.csv";
     public static HashMap<Integer, String> albums = new HashMap<>();
 
     static {

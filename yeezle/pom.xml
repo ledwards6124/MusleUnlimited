@@ -41,6 +41,21 @@
           <version>3.0.2</version>
         </plugin>
         <plugin>
+          <artifactId>org.codehaus.mojo</artifactId>
+          <version>3.1.0</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>com.yeezleunlimited</goal>
+                <goal>java</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <mainClass>com.yeezleunlimited</mainClass>
+          </configuration>
+        </plugin>
+        <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
         </plugin>
