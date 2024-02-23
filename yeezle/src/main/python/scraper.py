@@ -5,11 +5,8 @@ import re
 import sqlite3
 import json
 
-app = Flask(__name__)
-
 ENDPOINT = 'https://api.spotify.com/v1'
 
-@app.route('/get_token', methods=['POST'])
 def getAccessToken():
     clientID = '8c825f8af32f4a93a89d1a57a8352a88'
     clientSecret = '4f1a9d94d60245cda6519504004130ca'
@@ -23,28 +20,24 @@ def getAccessToken():
     else:
         return response.status_code, response.json()
     
-@app.route('/artists/<artist_id>', methods=['GET'])
 def getArtist(artistID):
     token = getAccessToken()[1].get('access_token')
     headers = {'Authorization': f'Bearer {token}'}
     response = requests.get(f"{ENDPOINT}/artists/{artistID}", headers=headers)
     return response.status_code, response.json()
 
-@app.route('/albums/<albumID>', methods=['GET'])
 def getAlbum(albumID):    
     token = getAccessToken()[1].get('access_token')
     headers = {'Authorization': f'Bearer {token}'}
     response = requests.get(f"{ENDPOINT}/albums/{albumID}", headers=headers)
     return response.status_code, response.json()
 
-@app.route('/albums/<artistID>/albums')
 def getDiscography(artistID):
     token = getAccessToken()[1].get('access_token')
     headers = {'Authorization': f'Bearer {token}'}
     response = requests.get(f"{ENDPOINT}/artists/{artistID}/albums?include_groups=album", headers=headers)
     return response.status_code, response.json()
 
-@app.route('/albums/<albumID>/tracks')
 def getAlbumTracks(albumID):
     token = getAccessToken()[1].get('access_token')
     headers = {'Authorization': f'Bearer {token}'}
