@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
         "./src/main/python"
-    ]
+    ],
+    "java.debug.settings.onBuildFailureProceed": true
 }

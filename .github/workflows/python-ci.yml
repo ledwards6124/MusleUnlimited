@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: Python CI with Unittest
 on: [push]
 jobs:
   build:
