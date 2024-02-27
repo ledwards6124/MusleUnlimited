@@ -1,17 +1,16 @@
 import base64
 import requests
 import re
-import sys
+from song import Song
+from artist import Artist
+from album import Album
 
-sys.path.append('src/game/')
 
-
-from song import *
 
 ENDPOINT = 'https://api.spotify.com/v1'
 
 
-class Caller:
+class SpotifyCaller:
 
     __slots__ = ['__id', '__secret', '__token', '__headers']
 
@@ -58,7 +57,7 @@ class Caller:
             albums.append(tup.get('id'))
         return albums
     
-    def getSong(self, songID):
+    def returnSong(self, songID):
         pattern = r'\s*(?:(feat\.|ft\.|feat|ft|with|\(feat\.|\(ft\.|\(feat|\(ft|\(with))(\s*.*)(\)|\s)$'
         songJSON = self.getTrack(songID)
         name = re.sub(pattern, '', songJSON.get('name'))
@@ -67,10 +66,28 @@ class Caller:
         artistName = songJSON.get('artists')[0].get('name')
         releaseDate = songJSON.get('album').get('release_date')
         duration = round(songJSON.get('duration_ms') / 1000)
+        trackNum = songJSON.get('track_number')
         features = self.__gatherFeatures(songJSON)
         artistID = songJSON.get('artists')[0].get('id')
-        song = Song(name, songID, albumName, albumID, artistName, artistID, features, releaseDate[:4], duration)
+        song = Song(name, songID, albumName, albumID, artistName, artistID, features, releaseDate[:4], duration, trackNum)
         return song
+    
+    def returnArtist(self, artistID):
+        artistJSON = self.getArtist(artistID)
+        artist = Artist(artistJSON.get('name'), artistJSON.get('id'), artistJSON.get('genres'))
+        return artist
+    
+    def returnAlbum(self, albumID):
+        albumJSON = self.getAlbum(albumID)
+        trackJSON = self.getTracklist(albumID)
+        albumID = albumJSON.get('id')
+        albumName = albumJSON.get('name')
+        artist = self.returnArtist(albumJSON.get('artists')[0].get('id'))
+        tracks = []
+        for t in trackJSON:
+            tracks.append(self.returnSong(t.get('id')))
+        album = Album(albumName, albumID, artist, tracks)
+        return album
     
     def __gatherFeatures(self, songJSON):
         artists = songJSON.get('artists')
@@ -107,3 +124,8 @@ class Caller:
         }
         return requests.get(f'{ENDPOINT}/search', headers=self.__headers, params=params).json().get('artists').get('items')
     
+def main():
+    c = SpotifyCaller()
+    print(c.returnAlbum('3r46DPIQeBQbjvjjV5mXGg'))
+
+main()
