@@ -1,7 +1,7 @@
 import base64
 import requests
 import re
-from src.api.music import *
+from api.music import *
 
 ENDPOINT = 'https://api.spotify.com/v1'
 
@@ -68,10 +68,11 @@ class SpotifyCaller:
         albumID = albumJSON.get('id')
         albumName = albumJSON.get('name')
         artist = self.returnArtist(albumJSON.get('artists')[0].get('id'))
+        date = albumJSON.get('release_date')[:4]
         tracks = []
         for t in trackJSON:
             tracks.append(self.__parseTrackJSON(t))
-        album = Album(albumName, albumID, artist, tracks)
+        album = Album(albumName, albumID, artist, tracks, date)
         return album
     
     def __parseTrackJSON(self, trackJSON):

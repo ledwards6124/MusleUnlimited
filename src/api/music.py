@@ -24,6 +24,21 @@ class Song:
     def getName(self):
         return self.__name
     
+    def getID(self):
+        return self.__songID
+    
+    def getArtist(self):
+        return self.__artist
+    
+    def getFeatures(self):
+        return self.__features
+    
+    def getDuration(self):
+        return self.__duration
+    
+    def getTrackNum(self):
+        return self.__trackNum
+    
 class Artist:
 
     __slots__ = ['__name', '__artistID','__genres']
@@ -48,16 +63,22 @@ class Artist:
     Artist ID: {self.__artistID} \n\
     Primary Genres: {self.__genres} \n'
 
+    def __eq__(self, other):
+        if isinstance(other, Artist):
+            return self.__artistID == other.getID()
+        return False
+
 
 
 class Album:
-    __slots__ = ['__name', '__albumID', '__artist', '__songs']
+    __slots__ = ['__name', '__albumID', '__artist', '__songs', '__releaseDate']
 
-    def __init__(self, name, albumID, artist, songs):
+    def __init__(self, name, albumID, artist, songs, releaseDate):
         self.__name = name
         self.__albumID = albumID
         self.__artist = artist
         self.__songs = songs
+        self.__releaseDate = releaseDate
 
     def __repr__(self) -> str:
         s = self.__name + f' by {self.__artist.getName()}:\n'
@@ -79,6 +100,8 @@ class Album:
     def tracks(self):
         return self.__songs
 
+    def release(self):
+        return self.__releaseDate
 
 
 
