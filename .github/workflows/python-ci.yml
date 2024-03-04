@@ -22,3 +22,5 @@ jobs:
       - name: Run Test
         run: python -m coverage run -m unittest -v
         working-directory: test
+      - name: Coverage Report
+        run: python -m coverage report
