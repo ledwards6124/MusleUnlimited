@@ -1,7 +1,7 @@
 import base64
 import requests
 import re
-from api.music import *
+from music import *
 
 ENDPOINT = 'https://api.spotify.com/v1'
 
@@ -46,6 +46,9 @@ class SpotifyCaller:
     def getTracklist(self, albumID):
         return requests.get(f'{ENDPOINT}/albums/{albumID}/tracks', headers=self.__headers).json().get('items')
     
+    def fetchPopularTracks(self, artistID):
+        return requests.get(f'{ENDPOINT}/artists/{artistID}/top-tracks', headers=self.__headers).json()
+    
     def getAllAlbums(self, artistID):
         albums = []
         response = requests.get(f"{ENDPOINT}/artists/{artistID}/albums?include_groups=album", headers=self.__headers).json()
@@ -75,9 +78,15 @@ class SpotifyCaller:
         album = Album(albumName, albumID, artist, tracks, date)
         return album
     
+    def returnPopularTracks(self, artistID):
+        songs = []
+        tracks = self.fetchPopularTracks(artistID)
+        for t in tracks.get('tracks'):
+            songs.append(self.__parseTrackJSON(t))
+        return songs
+    
     def __parseTrackJSON(self, trackJSON):
         pattern = r'\s*(?:(feat\.|ft\.|feat|ft|with|\(feat\.|\(ft\.|\(feat|\(ft|\(with))(\s*.*)(\)|\s)$'
-        album = trackJSON.get('album')
         name = re.sub(pattern, '', trackJSON.get('name'))
         songID = trackJSON.get('id')
         artist = self.returnArtist(trackJSON.get('artists')[0].get('id'))
@@ -119,5 +128,9 @@ class SpotifyCaller:
             'q' : artistName,
             'type': 'artist'
         }
-        return requests.get(f'{ENDPOINT}/search', headers=self.__headers, params=params).json().get('artists').get('items')
-    
+        res = requests.get(f'{ENDPOINT}/search', headers=self.__headers, params=params).json().get('artists')
+        artists = []
+        for a in res.get('items'):
+            artists.append(self.returnArtist(a.get('id')))
+        return artists
+
