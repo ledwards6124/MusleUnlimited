@@ -109,9 +109,9 @@ class testAPI(unittest.TestCase):
 
     def testArtistSearch(self):
         artistsJSON = self.__caller.searchForArtist('redveil')
-        self.assertEqual(artistsJSON[0].get('name'), 'redveil')
-        self.assertEqual(artistsJSON[1].get('id'), '1z4g3DjTBBZKhvAroFlhOM') #id for red velvet
-        self.assertEqual(artistsJSON[0].get('id'), '5BwsX8bXOFC1YnqSlyfOKM') #id for redveil
+        self.assertEqual(artistsJSON[0].getName(), 'redveil')
+        self.assertEqual(artistsJSON[1].getID(), '6yJ6QQ3Y5l0s0tn7b0arrO') #id for red velvet
+        self.assertEqual(artistsJSON[0].getID(), '5BwsX8bXOFC1YnqSlyfOKM') #id for redveil
         
         
 
