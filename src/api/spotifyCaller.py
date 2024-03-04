@@ -1,11 +1,7 @@
 import base64
 import requests
 import re
-from song import Song
-from artist import Artist
-from album import Album
-
-
+from music import Song, Artist, Album
 
 ENDPOINT = 'https://api.spotify.com/v1'
 
@@ -58,19 +54,8 @@ class SpotifyCaller:
         return albums
     
     def returnSong(self, songID):
-        pattern = r'\s*(?:(feat\.|ft\.|feat|ft|with|\(feat\.|\(ft\.|\(feat|\(ft|\(with))(\s*.*)(\)|\s)$'
         songJSON = self.getTrack(songID)
-        name = re.sub(pattern, '', songJSON.get('name'))
-        albumName = songJSON.get('album').get('name')
-        albumID = songJSON.get('album').get('id')
-        artistName = songJSON.get('artists')[0].get('name')
-        releaseDate = songJSON.get('album').get('release_date')
-        duration = round(songJSON.get('duration_ms') / 1000)
-        trackNum = songJSON.get('track_number')
-        features = self.__gatherFeatures(songJSON)
-        artistID = songJSON.get('artists')[0].get('id')
-        song = Song(name, songID, albumName, albumID, artistName, artistID, features, releaseDate[:4], duration, trackNum)
-        return song
+        return self.__parseTrackJSON(songJSON)
     
     def returnArtist(self, artistID):
         artistJSON = self.getArtist(artistID)
@@ -85,10 +70,21 @@ class SpotifyCaller:
         artist = self.returnArtist(albumJSON.get('artists')[0].get('id'))
         tracks = []
         for t in trackJSON:
-            tracks.append(self.returnSong(t.get('id')))
+            tracks.append(self.__parseTrackJSON(t))
         album = Album(albumName, albumID, artist, tracks)
         return album
     
+    def __parseTrackJSON(self, trackJSON):
+        pattern = r'\s*(?:(feat\.|ft\.|feat|ft|with|\(feat\.|\(ft\.|\(feat|\(ft|\(with))(\s*.*)(\)|\s)$'
+        album = trackJSON.get('album')
+        name = re.sub(pattern, '', trackJSON.get('name'))
+        songID = trackJSON.get('id')
+        artist = self.returnArtist(trackJSON.get('artists')[0].get('id'))
+        features = self.__gatherFeatures(trackJSON)
+        duration = round(trackJSON.get('duration_ms') / 1000)
+        trackNum = trackJSON.get('track_number')
+        return Song(name, songID, artist, features, duration, trackNum)
+
     def __gatherFeatures(self, songJSON):
         artists = songJSON.get('artists')
         count = 0
@@ -126,6 +122,7 @@ class SpotifyCaller:
     
 def main():
     c = SpotifyCaller()
-    print(c.returnAlbum('3r46DPIQeBQbjvjjV5mXGg'))
+    album = c.returnAlbum('30zwjSQEodaUXCn11nmiVF')
+    print(album)
 
 main()
