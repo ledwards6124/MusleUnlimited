@@ -1,7 +1,7 @@
 import base64
 import requests
 import re
-from music import Song, Artist, Album
+from src.api.music import *
 
 ENDPOINT = 'https://api.spotify.com/v1'
 
@@ -120,9 +120,3 @@ class SpotifyCaller:
         }
         return requests.get(f'{ENDPOINT}/search', headers=self.__headers, params=params).json().get('artists').get('items')
     
-def main():
-    c = SpotifyCaller()
-    album = c.returnAlbum('30zwjSQEodaUXCn11nmiVF')
-    print(album)
-
-main()
