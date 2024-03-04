@@ -3,7 +3,8 @@
         "./src/main/python",
         "./src/main/api",
         "./src/api",
-        "./src/game"
+        "./src/game",
+        "./src"
     ],
     "java.debug.settings.onBuildFailureProceed": true
 }

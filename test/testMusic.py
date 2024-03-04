@@ -6,7 +6,7 @@ cd = os.path.dirname(os.path.abspath(__file__))
 srcd = os.path.join(cd, '..', 'src')
 sys.path.insert(0, srcd)
 
-from src.api.music import Artist
+from api.music import Artist
 
 class testMusic(unittest.TestCase):
 
