@@ -1,6 +1,5 @@
 import unittest
 from src.api.music import *
-from src.api.spotifyCaller import SpotifyCaller
 
 class testMusic(unittest.TestCase):
 
