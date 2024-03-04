@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Update PYTHONPATH
-        run: echo "export PYTHONPATH=$PYTHONPATH" >> GITHUB_ENV
+        run: echo "export PYTHONPATH=$PYTHONPATH:/home/runner/work/YeezleUnlimited/YeezleUnlimited" >> GITHUB_ENV
       - name: Run Test
         run: python -m coverage run -m unittest
         working-directory: test
