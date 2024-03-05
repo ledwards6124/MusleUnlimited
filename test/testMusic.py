@@ -3,16 +3,15 @@ import os
 import sys
 
 cd = os.path.dirname(os.path.abspath(__file__))
-srcd = os.path.join(cd, '..', 'src\\api')
-sys.path.insert(0, srcd)
+srcd = os.path.join(cd, 'test')
+sys.path.append(srcd)
 
-from music import Artist, Album, Song
-from SpotifyCaller import *
+from src.api.music import Artist, Album, Song
+from src.api.SpotifyCaller import *
 
 class testMusic(unittest.TestCase):
 
     def testCoverage(self):
-        print(srcd)
         self.assertEqual('FOO', 'foo'.upper())
 
     def testArtist(self):

@@ -8,7 +8,7 @@ cd = os.path.dirname(os.path.abspath(__file__))
 srcd = os.path.join(cd, '..', 'src\\api')
 sys.path.insert(0, srcd)
 
-from music import *
+from src.api.music import *
 
 ENDPOINT = "https://api.spotify.com/v1"
 
