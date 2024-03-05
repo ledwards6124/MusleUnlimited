@@ -1,7 +1,7 @@
 import base64
 import requests
 import re
-from music import *
+from api.music import *
 
 ENDPOINT = "https://api.spotify.com/v1"
 

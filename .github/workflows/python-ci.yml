@@ -21,6 +21,6 @@ jobs:
         run: echo "export PYTHONPATH=$PYTHONPATH:/home/runner/work/MusleUnlimited/MusleUnlimited" >> GITHUB_ENV
       - name: Run Test
         run: python -m coverage run -m unittest -v
-        working-directory: test
+        working-directory: /
       - name: Coverage Report
         run: python -m coverage report
