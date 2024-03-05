@@ -19,7 +19,9 @@ jobs:
         run: python -m pip install --upgrade pip
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Set up test environment
+      - name: Set up permissions
+        run: chmod +w /coverage/
+      - name: Set up coverage folder
         run: export COVERAGE_FILE=/coverage/.coverage
         working-directory: /
       - name: Run Test
