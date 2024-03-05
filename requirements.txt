@@ -11,4 +11,3 @@ six==1.16.0
 soupsieve==2.4.1
 urllib3==2.0.2
 coverage==7.4.3
-os-sys==1.9.3
