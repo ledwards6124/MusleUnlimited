@@ -3,7 +3,7 @@ import os
 import sys
 
 cd = os.path.dirname(os.path.abspath(__file__))
-srcd = os.path.join(cd, '..', 'src')
+srcd = os.path.join(cd, '..', 'api')
 sys.path.insert(0, srcd)
 
 from api.music import Artist, Album, Song
