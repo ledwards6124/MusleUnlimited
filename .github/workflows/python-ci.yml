@@ -19,7 +19,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run Test
         run: python -m coverage run -m unittest -v
-        working-directory: /
+        working-directory: test
       - name: Coverage Report
         run: python -m coverage report
-        working-directory: coverage
+        working-directory: test/coverage
