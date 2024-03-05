@@ -6,6 +6,8 @@ jobs:
     strategy:
       matrix:
         python-version: [3.9]
+    env: 
+      COVERAGE_FILE: coverage/.coverage
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python all python version
@@ -22,4 +24,4 @@ jobs:
         working-directory: /
       - name: Coverage Report
         run: python -m coverage report
-        working-directory: coverage
+        working-directory: test
