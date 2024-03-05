@@ -22,7 +22,7 @@ jobs:
       - name: Set up permissions
         run: chmod +w coverage
       - name: Set up coverage folder
-        run: export COVERAGE_FILE=/coverage/.coverage
+        run: export COVERAGE_FILE=coverage/.coverage
         working-directory: /
       - name: Run Test
         run: python -m coverage run -m unittest -v
