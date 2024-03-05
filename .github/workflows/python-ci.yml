@@ -22,3 +22,4 @@ jobs:
         working-directory: /
       - name: Coverage Report
         run: python -m coverage report
+        working-directory: coverage
