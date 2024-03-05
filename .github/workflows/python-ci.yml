@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Set up permissions
-        run: chmod +w /coverage/
+        run: chmod +w /coverage
       - name: Set up coverage folder
         run: export COVERAGE_FILE=/coverage/.coverage
         working-directory: /
