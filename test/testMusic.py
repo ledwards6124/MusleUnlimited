@@ -6,8 +6,8 @@ cd = os.path.dirname(os.path.abspath(__file__))
 srcd = os.path.join(cd, '..', 'src\\api')
 sys.path.append(srcd)
 
-from api.music import Artist, Album, Song
-from api.SpotifyCaller import *
+from src.api.music import Artist, Album, Song
+from src.api.SpotifyCaller import *
 
 class testMusic(unittest.TestCase):
 
