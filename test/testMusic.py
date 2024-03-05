@@ -2,12 +2,8 @@ import unittest
 import os
 import sys
 
-cd = os.path.dirname(os.path.abspath(__file__))
-srcd = os.path.join(cd, '..', 'src')
-sys.path.append(srcd)
-
-from api.music import Artist, Album, Song
-from api.SpotifyCaller import SpotifyCaller
+from src.api.music import Artist, Album, Song
+from src.api.SpotifyCaller import SpotifyCaller
 
 class testMusic(unittest.TestCase):
 
