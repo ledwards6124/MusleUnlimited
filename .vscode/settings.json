@@ -4,7 +4,9 @@
         "./src/main/api",
         "./src/api",
         "./src/game",
-        "./src"
+        "./src",
+        "./test",
+        "./api"
     ],
     "java.debug.settings.onBuildFailureProceed": true
 }
