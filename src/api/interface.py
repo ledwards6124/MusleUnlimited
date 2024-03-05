@@ -1,4 +1,4 @@
-from spotifyCaller import *
+from SpotifyCaller import *
 from time import sleep
 
 class MusleCLI:
