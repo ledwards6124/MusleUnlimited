@@ -1,12 +1,6 @@
 import random
-import sys
-import os
 
-cd = os.path.dirname(os.path.abspath(__file__))
-srcd = os.path.join(cd, '..', 'api')
-sys.path.insert(0, srcd)
-
-from SpotifyCaller import *
+from api.SpotifyCaller import *
 
 
 class MusleGame:
@@ -18,14 +12,18 @@ class MusleGame:
             self.__totalGuesses = 0
             self.__maxGuesses = 8
             self.__pickSolutionSong(artistID)
+            self.__albumNums = {}
             
     def __pickSolutionSong(self, artistID):
         albumIDs = self.__caller.getAllAlbums(artistID)
         self.__songPool = {}
+        albumYears = {}
         for id in albumIDs:
             album = self.__caller.returnAlbum(id)
+            if album.release() not in albumYears.keys():
+                albumYears[album.release()] = album.getName()
             for song in album.tracks():
-                self.__songPool[song.getName().upper()] = song
+                self.__songPool[song.getName().upper()] = song            
         self.__solutionSong = random.choice(list(self.__songPool.values()))
         
     def solution(self):
@@ -53,7 +51,18 @@ class MusleGame:
             return None
         
     def __songIsSolution(self, song):
-        return song == self.__solutionSong
+        return song == self.__solutionSong        
+    
+    def __scoreGuess(self, guessSong):
+        pass
+        
+    def __scoreYear(self, guessSong):
+        res = self.__solutionSong.release() - guessSong.release()
+        return res if abs(res) < 5 else 0
+    
+    def __scoreDuration(self, guessSong):
+        res = self.__solutionSong
+        
     
     def play(self):
         while self.__gameIsValid():
@@ -63,14 +72,6 @@ class MusleGame:
                 if self.__songIsSolution(song):
                     print('You win!!')
         print(f'The song was {self.__solutionSong}...')
-            
-def main():
-    count = 0
-    while count < 10:
-        mg = MusleGame('5K4W6rqBFWDnAN6FQUkS6x')
-        print(mg.solution().getName())
-        count += 1
-    
-main()
+
     
         

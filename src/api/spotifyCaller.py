@@ -1,10 +1,7 @@
 import base64
 import requests
 import re
-import os
-import sys
-
-from src.api.music import *
+from src.api.music import Song, Artist, Album
 
 ENDPOINT = "https://api.spotify.com/v1"
 
@@ -119,11 +116,15 @@ class SpotifyCaller:
         pattern = r"\s*(?:(feat\.|ft\.|feat|ft|with|\(feat\.|\(ft\.|\(feat|\(ft|\(with))(\s*.*)(\)|\s)$"
         name = re.sub(pattern, "", trackJSON.get("name"))
         songID = trackJSON.get("id")
+        album = trackJSON.get('album')
+        if trackJSON.get('album') != None:
+            album = trackJSON.get('album').get('name')
+
         artist = self.returnArtist(trackJSON.get("artists")[0].get("id"))
         features = self.__gatherFeatures(trackJSON)
         duration = round(trackJSON.get("duration_ms") / 1000)
         trackNum = trackJSON.get("track_number")
-        return Song(name, songID, artist, features, duration, trackNum)
+        return Song(name, songID, artist, features, duration, trackNum, album)
 
     def __gatherFeatures(self, songJSON):
         artists = songJSON.get("artists")

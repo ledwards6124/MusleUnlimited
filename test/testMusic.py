@@ -17,7 +17,7 @@ class testMusic(unittest.TestCase):
         self.assertEqual(artist.getGenres(), ['rap'])
 
     def testSong(self):
-        song = Song('trademark usa', '1', Artist('baby keem', '1', ['rap']), [], 250, 1)
+        song = Song('trademark usa', '1', Artist('baby keem', '1', ['rap']), [], 250, 1, 'the melodic blue')
         self.assertEqual(song.getName(), 'trademark usa')
         self.assertEqual(song.getID(), '1')
         self.assertFalse(song.getID() == '2')
@@ -25,6 +25,7 @@ class testMusic(unittest.TestCase):
         self.assertEqual(song.getFeatures(), [])
         self.assertEqual(song.getDuration(), 250)
         self.assertEqual(song.getTrackNum(), 1)
+        self.assertEqual(song.getAlbum(), 'the melodic blue')
     
 
     def testAlbum(self):

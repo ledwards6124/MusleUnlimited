@@ -1,15 +1,16 @@
 class Song:
 
-    __slots__ = ['__name', '__songID', '__albumName', '__albumID', '__artist', 
-    '__features', '__releaseDate', '__duration' ,'__trackNum']
+    __slots__ = ['__name', '__songID', '__artist', 
+    '__features', '__releaseDate', '__duration' ,'__trackNum', '__album']
 
-    def __init__(self, name, songID, artist, features, duration, trackNum):
+    def __init__(self, name, songID, artist, features, duration, trackNum, album):
         self.__name = name
         self.__songID = songID
         self.__artist = artist
         self.__features = features
         self.__duration = duration
         self.__trackNum = trackNum
+        self.__album = album
 
     def __repr__(self) -> str:
         return f'\n\
@@ -37,6 +38,9 @@ class Song:
 
     def getTrackNum(self):
         return self.__trackNum
+    
+    def getAlbum(self):
+        return self.__album
     
     def __eq__(self, other):
         if isinstance(other, Song):

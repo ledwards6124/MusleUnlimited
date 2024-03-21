@@ -1,9 +1,10 @@
 from SpotifyCaller import *
-from time import sleep
+
+from musle import MusleGame
 
 class MusleCLI:
 
-    __slots__ = ['__caller', '_currentArtist'] #add game slot later
+    __slots__ = ['__caller', '_currentArtist']
 
     def __init__(self):
         try:
@@ -30,14 +31,18 @@ class MusleCLI:
             count += 1
         artistChoice = input('\nEnter what number artist you want to choose and I can show you some of their songs just to make sure!\nYour Choice: ')
         tracks = self.__caller.returnPopularTracks(possibleArtists[int(artistChoice) - 1].getID())
-        print(f"Showing you {possibleArtists[int(artistChoice) - 1].getName()}'s most popular songs!")
+        artistID = possibleArtists[int(artistChoice) - 1].getID()
+        artistName = possibleArtists[int(artistChoice) - 1].getName()
+        print(f"Showing you {artistName}'s most popular songs!")
         for t in tracks:
             print(t.getName())
         print('Do these look familiar? (Y|N)')
         choice = input()
         choice = choice.strip().upper()
         if choice == 'Y':
-            pass #play game with chosen artist
+            mg = MusleGame(artistID)
+            print(f'Can you guess this {artistName} song?')
+            mg.play()
         elif choice == 'N':
             print('Do you want to choose another artist? (Y|N)')
             if choice == 'Y':
