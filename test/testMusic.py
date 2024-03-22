@@ -1,7 +1,8 @@
 import unittest
 
 import sys
-sys.path.append('src')
+import os
+sys.path.append(f'{os.path.dirname(os.curdir)}/src')
 
 
 from src.api.music import Artist, Album, Song
