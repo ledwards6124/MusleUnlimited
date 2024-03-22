@@ -16,7 +16,7 @@ class Song:
         return f'\n\
     Name: {self.__name} \n\
     ID: {self.__songID} \n\
-    Artist: {self.__artist} \n\
+    Artist: {self.__artist.getName()} \n\
     Features {self.__features} \n\
     Duration: {self.__duration} \n\
     Track Number: {self.__trackNum}'

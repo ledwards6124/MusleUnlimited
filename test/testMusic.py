@@ -1,9 +1,9 @@
 import unittest
-import os
-import sys
+
 
 from src.api.music import Artist, Album, Song
 from src.api.SpotifyCaller import SpotifyCaller
+from src.game.musle import MusleGame
 
 class testMusic(unittest.TestCase):
 
@@ -42,7 +42,8 @@ class testAPI(unittest.TestCase):
 
     def setUp(self):
         self.__caller = SpotifyCaller()
-        print('\nCaller Initialized\t')
+        print('\nCaller Initialized...')
+        print(f'Caller Session Token: {self.__caller.getToken()}')
 
     def testTokenExists(self):
         self.assertIsNotNone(self.__caller.getToken())
@@ -109,6 +110,53 @@ class testAPI(unittest.TestCase):
         self.assertEqual(artistsJSON[0].getName(), 'redveil')
         self.assertEqual(artistsJSON[1].getID(), '6yJ6QQ3Y5l0s0tn7b0arrO') #id for red velvet
         self.assertEqual(artistsJSON[0].getID(), '5BwsX8bXOFC1YnqSlyfOKM') #id for redveil
+        
+    def testPopularTracks(self):
+        songs = self.__caller.returnPopularTracks('5K4W6rqBFWDnAN6FQUkS6x')
+        names = [s.getName() for s in songs]
+        self.assertTrue('CARNIVAL' in names)
+        self.assertTrue('I Wonder' in names)
+        self.assertTrue('Runaway' in names)
+        
+class testGame(unittest.TestCase):
+    
+    __slots__ = ['__game']
+    
+    def setUp(self):
+        print('\nMusle Game Initialized...')
+        self.__game = MusleGame('7Hjbimq43OgxaBRpFXic4x') #id for saba
+        
+    def testInitialization(self):
+        self.assertIsInstance(self.__game.solution(), Song)
+        self.assertIsInstance(self.__game.getCaller(), SpotifyCaller)
+        self.assertEqual(self.__game.solution().getArtist().getID(), '7Hjbimq43OgxaBRpFXic4x') #very long chain of methods returns artist id, verify that correct artist is chosen
+        self.assertEqual(self.__game.getGuessMax(), 8)
+        self.assertEqual(self.__game.getGuessTotal(), 0)
+        
+    def testGameIsValid(self):
+        self.assertTrue(self.__game.gameIsValid()) #game is valid since 0 guesses
+        for i in range(10):
+            self.__game.guess('few good things') #guess more than the limit
+        self.assertFalse(self.__game.gameIsValid())
+        
+    def testGuess(self):
+        guess = self.__game.guess('few good things')
+        self.assertIsInstance(guess, Song)
+        self.assertEqual(guess.getName(), 'Few Good Things')
+        self.assertEqual(guess.getArtist().getName(), 'Saba')
+        invalidGuess = self.__game.guess('flatbed freestyle') #saba did NOT make this song
+        self.assertIsNone(invalidGuess)
+        
+    def testSolution(self):
+        solution = self.__game.solution()
+        self.assertTrue(self.__game.songIsSolution(solution))
+        notSolution = Song('not solution', '0', 'french montana', [], 69420, 0, 'mac and shit 5')
+        self.assertFalse(self.__game.songIsSolution(notSolution))
+        
+        
+    
+        
+        
         
         
 

@@ -1,6 +1,7 @@
-from SpotifyCaller import *
+from api.SpotifyCaller import *
 
-from musle import MusleGame
+from game.musle import MusleGame
+
 
 class MusleCLI:
 
