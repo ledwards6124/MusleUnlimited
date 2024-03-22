@@ -1,23 +1,30 @@
-name: Python CI with Unittest
-on: [push]
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.9]
-    env: 
-      COVERAGE_FILE: coverage/.coverage
+
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python all python version
+
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
-          architecture: x64
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip
+          python-version: '3.x'
+
       - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Run Test
-        run: python -m unittest -v
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run unittests with coverage
+        run: |
+          pytest --cov=src --cov-report=term-missing -v
