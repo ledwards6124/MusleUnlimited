@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Test Suite with Coverage
         run: |
-          python -m coverage run -m pytest --rootdir=/home/runner/work/MusleUnlimited test/testMusic.py
+          python --rootdir=/home/runner/work/MusleUnlimited -m coverage run -m pytest test/testMusic.py
       - name: Generage Coverage Report
         run: |
           python -m coverage report
