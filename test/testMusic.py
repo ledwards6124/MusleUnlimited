@@ -1,5 +1,8 @@
 import unittest
 
+import sys
+sys.path.append('src')
+
 
 from src.api.music import Artist, Album, Song
 from src.api.SpotifyCaller import SpotifyCaller
