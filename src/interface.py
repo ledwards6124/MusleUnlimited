@@ -1,6 +1,6 @@
 from api.SpotifyCaller import *
 
-from game.musle import MusleGame
+from api.musle import MusleGame
 
 
 class MusleCLI:
@@ -43,6 +43,7 @@ class MusleCLI:
         if choice == 'Y':
             mg = MusleGame(artistID)
             print(f'Can you guess this {artistName} song?')
+            print(mg.getYears()['2022'])
             mg.play()
         elif choice == 'N':
             print('Do you want to choose another artist? (Y|N)')
@@ -57,7 +58,8 @@ def main():
     cli = MusleCLI()
     cli.selectArtist()
 
-main()
+if __name__ == '__main__':
+    main()
 
 
     

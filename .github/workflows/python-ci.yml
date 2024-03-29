@@ -18,7 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: '3.9'
 
       - name: Install Dependencies
         run: |
@@ -27,8 +27,16 @@ jobs:
 
       - name: Run Test Suite with Coverage
         run: |
-          python --rootdir=/home/runner/work/MusleUnlimited -m coverage run -m pytest test/testMusic.py
-      - name: Generage Coverage Report
+          python -m coverage run -m unittest
+      - name: Test Results
         run: |
           python -m coverage report
-
+          python -m coverage html
+      - name: Upload Coverage HTML Report
+        uses: actions/upload-artifact@v2
+        with:
+            name: coverage-report
+            path: htmlcov
+      - name: Provide Link to Coverage HTML Report
+        run: |
+            echo "Coverage report: ${{ steps.upload.outputs.artifact_url }}"

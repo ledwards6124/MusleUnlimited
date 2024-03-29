@@ -1,7 +1,12 @@
 import base64
 import requests
 import re
-from src.api.music import Song, Artist, Album
+
+import sys
+import os
+sys.path.append(f'{os.path.dirname(os.curdir)}\\src\\api\\')
+
+from .music import Song, Artist, Album
 
 ENDPOINT = "https://api.spotify.com/v1"
 
