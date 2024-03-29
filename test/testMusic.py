@@ -5,7 +5,6 @@ import os
 #sys.path.append(f'{os.path.dirname(os.curdir)}..\\src')
 
 
-
 from src.music import Artist, Album, Song
 from src.spotifyCaller import SpotifyCaller
 from src.musle import MusleGame
