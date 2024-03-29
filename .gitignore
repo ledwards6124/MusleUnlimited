@@ -4,4 +4,4 @@
 *.pyc
 .scannerwork/
 __pycache__/
-.vscode
+*.vscode

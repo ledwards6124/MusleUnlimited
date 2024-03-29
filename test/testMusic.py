@@ -6,9 +6,9 @@ sys.path.append(f'{os.path.dirname(os.curdir)}..\\')
 
 
 
-from src.api.music import Artist, Album, Song
-from src.api.SpotifyCaller import SpotifyCaller
-from src.api.musle import MusleGame
+from src.music import Artist, Album, Song
+from src.spotifyCaller import SpotifyCaller
+from src.musle import MusleGame
 
 class testMusic(unittest.TestCase):
 

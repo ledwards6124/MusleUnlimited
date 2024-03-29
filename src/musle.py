@@ -4,7 +4,7 @@ import sys
 import os
 sys.path.append(f'{os.path.dirname(os.curdir)}..\\src\\api\\')
 
-from .SpotifyCaller import *
+from .spotifyCaller import *
 
 
 class MusleGame:
