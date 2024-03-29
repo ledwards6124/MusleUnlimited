@@ -2,7 +2,7 @@ import unittest
 
 import sys
 import os
-sys.path.append(f'{os.path.dirname(os.curdir)}\\src\\api')
+sys.path.append(f'{os.path.dirname(os.curdir)}..\\src\\api')
 
 
 

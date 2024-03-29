@@ -32,6 +32,7 @@ jobs:
         run: |
           python -m coverage report
           python -m coverage html
+        working-directory: MusleUnlimited
       - name: Upload Coverage HTML Report
         uses: actions/upload-artifact@v2
         with:
