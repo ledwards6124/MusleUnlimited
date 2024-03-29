@@ -28,7 +28,7 @@ jobs:
       - name: Run Test Suite with Coverage
         run: |
           python -m coverage run -m unittest
-        working-directory: ../test
+        working-directory: test
       - name: Test Results
         run: |
           python -m coverage report
