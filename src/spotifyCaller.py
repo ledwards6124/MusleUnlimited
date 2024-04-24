@@ -6,7 +6,7 @@ import sys
 import os
 sys.path.append(f'{os.path.dirname(os.curdir)}\\src\\api\\')
 
-from .music import Song, Artist, Album
+from music import Song, Artist, Album
 
 ENDPOINT = "https://api.spotify.com/v1"
 
@@ -169,4 +169,4 @@ class SpotifyCaller:
         artists = []
         for a in res.get("items"):
             artists.append(self.returnArtist(a.get("id")))
-        return artists
+        return artists 
