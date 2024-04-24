@@ -1,12 +1,7 @@
 import base64
 import requests
 import re
-
-import sys
-import os
-sys.path.append(f'{os.path.dirname(os.curdir)}\\src\\api\\')
-
-from music import Song, Artist, Album
+import json
 
 ENDPOINT = "https://api.spotify.com/v1"
 
@@ -50,19 +45,40 @@ class SpotifyCaller:
         return code.status_code == 200
 
     def getArtist(self, artistID):
-        return requests.get(
-            f"{ENDPOINT}/artists/{artistID}", headers=self.__headers
-        ).json()
+        jData = requests.get(f"{ENDPOINT}/artists/{artistID}", headers=self.__headers).json()
+        parsed = {
+            'name': jData['name'],
+            'genres': jData['genres'],
+            'id': jData['id']
+        }
+        return json.dumps(parsed)
 
     def getAlbum(self, albumID):
-        return requests.get(
-            f"{ENDPOINT}/albums/{albumID}", headers=self.__headers
-        ).json()
+        jData = requests.get(f"{ENDPOINT}/albums/{albumID}", headers=self.__headers).json()
+        parsed = []
+        pattern = r"\s*(?:(feat\.|ft\.|feat|ft|with|\(feat\.|\(ft\.|\(feat|\(ft|\(with))(\s*.*)(\)|\s)$"
+        for track in jData['tracks']['items']:
+            parsed.append({
+            'name': re.sub(pattern, "", track.get("name")),
+            'artists': self.__gatherFeatures(track),
+            'primary_artist_id': track['artists'][0]['id'],
+            'duration': round(track['duration_ms'] / 1000),
+            'track': track['track_number']
+        })
+        return json.dumps(parsed)
 
     def getTrack(self, songID):
-        return requests.get(
-            f"{ENDPOINT}/tracks/{songID}", headers=self.__headers
-        ).json()
+        jData = requests.get(f"{ENDPOINT}/tracks/{songID}", headers=self.__headers).json()
+        pattern = r"\s*(?:(feat\.|ft\.|feat|ft|with|\(feat\.|\(ft\.|\(feat|\(ft|\(with))(\s*.*)(\)|\s)$"
+        parsed = {
+            'name': re.sub(pattern, "", jData["name"]),
+            'album': {'name': jData['album']['name'], 'id': jData['album']['id']},
+            'artists': self.__gatherFeatures(jData),
+            'primary_artist_id': jData['artists'][0]['id'],
+            'duration': round(jData['duration_ms'] / 1000),
+            'track': jData['track_number']
+        }
+        return json.dumps(parsed)
 
     def getTracklist(self, albumID):
         return (
@@ -72,9 +88,23 @@ class SpotifyCaller:
         )
 
     def fetchPopularTracks(self, artistID):
-        return requests.get(
-            f"{ENDPOINT}/artists/{artistID}/top-tracks", headers=self.__headers
-        ).json()
+        jData = requests.get(f"{ENDPOINT}/artists/{artistID}/top-tracks", headers=self.__headers).json()
+        i = 0
+        pattern = r"\s*(?:(feat\.|ft\.|feat|ft|with|\(feat\.|\(ft\.|\(feat|\(ft|\(with))(\s*.*)(\)|\s)$"
+        parsed = []
+        for d in jData['tracks']:
+            if i > 4:
+                break
+            parsed.append({            
+            'name': re.sub(pattern, "", d.get("name")),
+            'album': {'name': d['album']['name'], 'id': d['album']['id']},
+            'artists': self.__gatherFeatures(d),
+            'primary_artist_id': d['artists'][0]['id'],
+            'duration': round(d['duration_ms'] / 1000),
+            'track': d['track_number']})
+            i += 1
+        return json.dumps(parsed)
+            
 
     def getAllAlbums(self, artistID):
         albums = []
@@ -89,13 +119,6 @@ class SpotifyCaller:
     def returnSong(self, songID):
         songJSON = self.getTrack(songID)
         return self.__parseTrackJSON(songJSON)
-
-    def returnArtist(self, artistID):
-        artistJSON = self.getArtist(artistID)
-        artist = Artist(
-            artistJSON.get("name"), artistJSON.get("id"), artistJSON.get("genres")
-        )
-        return artist
 
     def returnAlbum(self, albumID):
         albumJSON = self.getAlbum(albumID)
@@ -161,12 +184,18 @@ class SpotifyCaller:
 
     def searchForArtist(self, artistName):
         params = {"q": artistName, "type": "artist"}
-        res = (
-            requests.get(f"{ENDPOINT}/search", headers=self.__headers, params=params)
-            .json()
-            .get("artists")
-        )
-        artists = []
-        for a in res.get("items"):
-            artists.append(self.returnArtist(a.get("id")))
-        return artists 
+        jData = (requests.get(f"{ENDPOINT}/search", headers=self.__headers, params=params).json().get("artists"))
+        parsed = []
+        i = 0
+        for d in jData['items']:
+            if i > 4:
+                break
+            parsed.append({
+            'name': d ['name'],
+            'genres': d['genres'],
+            'id': d['id']
+            })
+            i += 1
+        return parsed
+        
+        
